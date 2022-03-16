@@ -1,0 +1,228 @@
+
+
+Programming:
+	- Array Sorting - 50
+		Message:  "See README.md for challenge details. "
+		Hint:  ""
+		File:  	- input_stream.bin 
+			- README.md
+		Notes:	
+		Flag:  “flag{H3b~4c?}”
+		Solution:  The code is in knownGnome CTF repository for Nov 2022 except the except need to also xor the 99th array with everything.
+	- Interpreter - 75
+		Message:  "See README.md for challenge details. "
+		Hint:  ""
+		File:  	- input_stream.bin
+			- interpreter.h
+			- README.md
+		Notes:	
+		Solution: 
+	- Graph Search - 75
+		Message:  "See README.md for challenge details. "
+		Hint:  ""
+		File:  	- input_stream.bin 
+			- README.md
+		Notes:	
+		Solution: 
+	- List Sort - 100
+		Message:  "See README.md for challenge details. "
+		Hint:  ""
+		File:  	- input_stream.bin 
+			- README.md
+		Notes:	
+		Solution: 
+	
+Pwn: 
+	- Win - 50
+		Message:  "Can you figure out how to win this challenge? Connect to cweaccessionsctf.com:1337."
+		Hint:  ""
+		File:  	- win
+		Notes:	
+		Flag: flag{no_stack_smashing_here}
+		Solution: I used strings on the file.  Looking through it, two things stuck out to me, a long string of "Q"s and a shell command "cat flag.txt" right about the initial server response.  I plugged that list of Qs in and got a seg fault.  I cut the number of Qs back hoping to find the number right before it seg faulted but in the process I found the perfect number that ran the cat command.  I telnet'd to the server, dropped those Qs in the input and got the flag.
+	- Shell - 75
+		Message:  "
+I see that NX is disabled on this binary......
+Connect to cweaccessionsctf.com:1370.
+Note: ASLR is disabled on the server. Check this out to disable it on your local machine: https://askubuntu.com/questions/318315/how-can-i-temporarily-disable-aslr-address-space-layout-randomization"
+		Hint:  ""
+		File:  	- shell
+		Notes:	
+		Solution: 
+	- Canary - 125
+		Message:  "I see that this binary might have a little birdie nesting in it. Can you figure out how to get past it to get to the flag?
+Connect to cweaccessionsctf.com:1360."
+		Hint:  ""
+		File:  	- canary
+		Notes:	Found function read_in called in main, seems to be preventing stack smashing, but there something funny about it.
+		Solution: 
+	- Retto - 150
+		Message:  "Can you get the flag now? There must be SOMETHING you can return to..... Connect to cweaccessionsctf.com:1360. "
+		Hint:  ""
+		File:  	- retto
+		Notes:	
+		Flag: 
+		Solution:
+Forensics:
+	- File Ninja - 50
+		Message:  "One of our new employees has stopped showing up to work. We think he took the job just to steal our flag, but we have no idea how he got it off his work laptop - we blocked access to most of the internet except developer specific sites. See if you can figure out how he got the flag off the system by analyzing a image of his laptop's filesystem."
+		Hint:  ""
+		File:  	- backup.iso
+		Flag:  flag{g1t_15_c0mplex_pbtrg3hv6d}
+		Solution:  I looked around for a bit in the backup.iso file on Windows, dropping random files in Notepad++.  I eventually dropped the .iso file in Kali and extracted it to a separate file.  I ran the command "grep -r flag [extracted backup.iso folder]".  Scrolling through, in DOCUMENT/WORK_FOL/_GIT/CONFIG the line of text "flag = ZmxhZ3tnMXRfMTVfYzBtcGxleF9wYnRyZzNodjZkfQ==" popped up at the end.  I tried dropping it in the answer box as it was but didn't work.  I then used base64decode.org to decode the flag and got the above flag as the answer.
+		https://www.base64decode.org/
+	- The New 2.0 - 125
+		Message:  "We have been surveilling a known hacker's internet traffic. He mostly just looks at online hacking forums. However, we think he's transmitted a flag to an associate through some means. We can't figure it out, can you?"
+		Hint:  "You can decrypt TLSv1.2+ traffic using a keylog file."
+		File:  	- capture.pcapng
+			- sslkeylog.log
+		Notes:	
+		Solution: 
+	- Rabbit Hole - 150
+		Message:  "We received a weird file. After hours of analysis, we determined it is not an ARCHIVE. "
+		Hint:  "Inspect ALL files that you come across for the flag. You may have to dig deep on this one. "
+		File:  	- not_an_archive
+		Notes:	
+		Solution: 
+
+Reversing:
+	- input1 - 50
+		Message:  "Can you pass the check? Connect to cweaccessionsctf.com:1380 to find out. "
+		Hint:  ""
+		File:  	- input1
+		Notes:	
+		Flag: flag{3sNt_a$$embly_sw33T}
+		Solution: 
+#include <stdio.h>
+#include <stdlib.h>
+
+unsigned int check(unsigned int input) {
+
+	return (input ^ 0x735) >> 4 ^ 0x6f0;
+}
+
+int main(void) {
+	int truther = 0;
+	unsigned int checker;
+	unsigned int counter = 0;
+	unsigned int number = 0x111111;
+
+	number = (number ^ 0x735) >> 4 ^ 0x6f0; //>> 4 ^ 0x6f0;
+	printf("%x\n", number);
+
+//	number ^= 0x6f0;
+//	number = number << 4;
+//	number = (number ^ 0x730); //<< 4 ^ 0x6f0;
+
+
+	printf("%x\n", number);
+
+	while(truther != 1) {
+		checker = check(counter);
+		if(checker != 0xb88202) {
+			counter++;
+			printf("%x\n", counter);
+		} else {
+			truther = 1;
+		}
+	}
+
+
+//	number = number ^ 0x6f0;
+//	number = number << 4;
+//	number = number ^ 0x735;
+//
+//	printf("%x", number);
+
+
+
+
+	return 0;
+}
+
+
+	- input2 - 50
+		Message:  "Can you figure out the password? Connect to cweaccessionsctf.com:1390 to find out. "
+		Hint:  ""
+		File:  	- input2
+		Notes:	
+		Solution: 
+	- Hash - 125
+		Message:  "We found x86 code that was used as a hashing function in x86.txt. Create the equivalent C code from the x86 code, and use it to hash the string "Developing a compiler was a logical move; but in matters like this, you don't run against logic - you run against people who can't change their minds. -Grace Hopper"
+The resulting hash value is the flag.
+To help you, starter_code.c is provided as a template to reconstruct the x86 code. When you are done, you should run the code like so: $ ./starter_code "Developing a compiler was a logical move; but in matters like this, you don't run against logic - you run against people who can't change their minds. -Grace Hopper"”
+		Note: 
+		Hint:  ""
+		File:  	- starter_code.c
+			- x86.txt
+		Notes:	
+		Flag:  
+		Solution: 
+
+Crypto:
+	- Classic - 50
+		Message: "Decode me! Even Caesar might have had a little trouble."
+		File: 	- classic.txt
+		Solution: Went to the site below, used the following alphabet andshifted through until I go the flag.
+			https://cryptii.com/pipes/caesar-cipher
+			Alphabet: !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+			Shift: 89
+			Flag: flag{Caes@r_c0uldnt_sH!ft_L!ke_this}
+	- Diffie-cult - 75
+		Message:  "We've managed to intercept a Diffie-Hellman key exchange. We know that p=1009, g=4, A=635, and B=442. We also know that a and b are both two digit numbers. Find a and b.
+Note: the flag for this challenge will be in the following format: “a,b"
+		Hint:  "Check this website out if you're unfamiliar with Diffie-Hellman: https://www.comparitech.com/blog/information-security/diffie-hellman-key-exchange/"
+		File:  	
+		Notes:	https://www.irongeek.com/diffie-hellman.php
+			635 = g^a mod p == 4^a mod 1009 :: a = 252n + 42.
+			442 = g^a mod p == 4^b mod 1009 :: b = 252n + 55.
+		Solution: 
+			Flag: 42,55
+	- Rolled - 100
+		Message:  "Do you think you can break this crypto that we rolled? Check it out at cweaccessionsctf.com:1350. Note: The flag is in flag format, and consists only of lowercase letters, plus '{' and '}'."
+		Hint:  ""
+		File:	- rolled.txt
+		Notes:	
+		Solution: 
+
+Misc:
+	- Socketz - 75
+		Message:  "Connect to cweaccessionsctf.com:1420 and see if you can get a flag! I'd recommend you'd script this though, unless you really want to do 500 math problems. "
+		Hint:  ""
+		File:  	
+		Notes:	
+		Flag:  “flag{everyone_gets_a_socket}”
+		Solution:  Python script:
+			from pwn import *
+			r = remote(‘cweaccessionctf.com’, ‘1420’)
+
+			while True:
+				s = r.recvline(False)
+				print(s)
+				if s.endswith(b’?’):
+					answer = str(eval((s[(s.index(b’f’)+2:s.index(b’?’)])))
+					print(answer)
+					r.sendline(answer)
+
+	- Of Least Significance - 75
+		Message:  "There's a flag hidden inside the given text! Can you figure out how to extract it?"
+		Hint:  "I would do some research on stegonography."
+		File:  	- theLeastSignificant.txt
+		Notes:	
+		Solution:  flag{b!ts_@nd_pieces_of_steg}
+			I first attempted to run common stegonography detection tools on the file to see if what was in the file was some level of image and maybe I need to change the file extention.  I checked for various file format indicators in the file and various encodings.  All those efforts didn’t produce any results.  No results lead me to believe there was maybe a hidden message in the text and opened the file in Notepad++ and turned on the Hex Editor plugin.  I thought maybe there would be a pattern in the hex but nothing really jumped out.  I switched displays to binary display with 16 columns.  The binary had some interesting pattern; the last bit in the 1st and 8th columns were all 0.  I thought maybe the characters in those columns may spell out a flag, but nothing came together.  After banging my head on the desk for a while, it kind of clicked.  Least significant bit, there were 8 least significant bits between columns, all the characters started with 0s, maybe I should see if taking the last bit from all the characters had any kind of pattern.  Taking the first eight “last bits”, the bits broke out to ASCII letter ‘f’.  The second eight “last bits” broke out to ASCII letter ’l’, and the thrid was ‘a’.  Was then I was “Oh yeah, we’re on to something now”.  Taking the rest of the “ last bits” produced the flag.
+
+	- Closest - 75
+		Message:  " There are a lot of interesting people living in Viriginia currently. Can you figure out which of the people listed in the CSV file lives the closest to the coordinates 37.065984, -79.601172?
+Note: The flag is just the full name of the person closest to the coordinates.
+		Hint:  "I highly recommend checking out this site: https://geocoding.geo.census.gov/geocoder/Geocoding_Services_API.pdf"
+		File:  	- Addresses.csv
+		Notes:	https://en.wikipedia.org/wiki/List_of_cities_and_counties_in_Virginia
+	https://www.google.com/maps/place/37%C2%B003'57.5%22N+79%C2%B036'04.2%22W/@37.0747944,-79.6887828,12z/data=!4m5!3m4!1s0x0:0x0!8m2!3d37.065984!4d-79.601172
+https://geocoding.geo.census.gov/geocoder/Addresses.csv
+		Flag: Richard Howe
+		Solution: Read through the link from the hint.  At the bottom was a section for batch geocoding in formats that include CSV files, which is what was given in the problem.  I looked at the CSV given a bit, more than a thousand entries.  The batch geocoding said the file must be in a unique ID, street address, city, state, zip order.  Street address was the only required field, everything else could be a null value.  Wasn't sure what to use for a null value.  I punched the coordinates into google maps and it put the location in the middle of a lake in Virginia.  I made a copy of the the addresses file and deleted the names column.  Pasted "Viginia" in the all the cells in the columns next to the city cells and a space in the column for zip code.  I got Malformed input file or file not of type CSV error in the output file. it gave an example of a good file to use (https://geocoding.geo.census.gov/geocoder/Addresses.csv).  I noticed I forgot the unique identifier column and replaced the names as unique numbers (just incremented from 1 every cell).  I got a better result with no errors, but didn't get any matches.  I put the value 10000 in as the zipcode value and ran again.  The two closest coordinates were in Wirtz VA, and of those, looking it up in the original address list was Richard Howe.  
+The command I ran was "curl --form addressFile=@addresses_ready.csv --form benchmark=2020 https://geocoding.geo.census.gov/geocoder/locations/addressbatch --output geocoderesult.csv"
+
+			
+
